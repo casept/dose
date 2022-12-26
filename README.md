@@ -1,6 +1,8 @@
-# Libdose, the simple*(-ish) C networking library
+# Libdose, the simple(-ish) C networking library
 
-*## Features
+# NOTE: This library is currently heavily work-in-progress! The advertised features are not reality, more of a roadmap!
+
+## Features
 
 * Inspired by the [plan9port](https://9fans.github.io/plan9port/man/man3/dial.html) networking API
 * All APIs are sync-only

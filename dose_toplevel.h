@@ -1,5 +1,5 @@
-#ifndef __LIBDOSE_H__
-#define __LIBDOSE_H__
+#ifndef __LIBDOSE_TOPLEVEL_H__
+#define __LIBDOSE_TOPLEVEL_H__
 
 #ifdef __cplusplus
 extern "C" {

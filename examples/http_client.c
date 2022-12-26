@@ -4,10 +4,12 @@
 #include <string.h>
 #include <unistd.h>
 
+// This tells the library this source file is where function definitions should be expanded into.
+// Must be set in exactly one source file in your project.
 #define DOSE_IMPLEMENTATION
 // This enables internal log and more detailed error messages to be printed to stderr
 #define DOSE_DEBUG
-#include "../dose.h"
+#include <dose.h>
 
 int main(int argc, char** argv) {
     int sock = dose_dial("tcp!google.com!http");  // Equivalent to "tcp!google.com!80"

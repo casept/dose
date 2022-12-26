@@ -23,9 +23,14 @@
 
 #include "debug_impl.h"
 
+// Windows uses different types for the buffer
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+ssize_t dose_send(int desc, const void *buf, size_t count) { return send(desc, (const char *)buf, count, 0); }
+ssize_t dose_recv(int desc, void *buf, size_t count) { return recv(desc, (char *)buf, count, 0); }
+#else
 ssize_t dose_send(int desc, const void *buf, size_t count) { return send(desc, buf, count, 0); }
-
 ssize_t dose_recv(int desc, void *buf, size_t count) { return recv(desc, buf, count, 0); }
+#endif
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 int dose_close(int desc) {

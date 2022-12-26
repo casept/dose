@@ -9,7 +9,7 @@
     #include <ws2tcpip.h>
     // clang-format on
     // So MSVC links against winsock2 automatically
-    #pragma comment(lib, "Ws2_32")
+    #pragma comment(lib, "ws2_32.lib")
 #else
     // Assume Unix-like
     #include <arpa/inet.h>
@@ -97,6 +97,7 @@ int dose_dial(const char* addr) {
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
     LPWSADATA data;
+    memset(&data, 0, sizeof(LPWSADATA));
     if (WSAStartup(MAKEWORD(2, 2), data) != 0) {
         dose_debugf(__func__, "FAIL: WSAStartup() failed");
         free(scratch);

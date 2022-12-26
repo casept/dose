@@ -7,7 +7,7 @@
     #define WIN32_LEAN_AND_MEAN
     #include <winsock2.h>
     // So MSVC links against winsock2 automatically
-    #pragma comment(lib, "Ws2_32")
+    #pragma comment(lib, "ws2_32.lib")
 #else
     // Assume Unix-like
     #include <errno.h>

@@ -30,6 +30,11 @@ int main(int argc, char** argv) {
         exit(EXIT_FAILURE);
     }
 
+    if (dose_close(sock) != 0) {
+        fprintf(stderr, "dose_cose() failed!\n");
+        exit(EXIT_FAILURE);
+    }
+
     printf("Response:\n%s\n", resp);
     free(resp);
 }

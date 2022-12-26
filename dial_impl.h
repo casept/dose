@@ -1,15 +1,28 @@
 #ifndef __LIBDOSE_DIAL_IMPL_H__
 #define __LIBDOSE_DIAL_IMPL_H__
 
-#include <arpa/inet.h>
-#include <errno.h>
-#include <netdb.h>
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+    // Order matters
+    // clang-format off
+    #define WIN32_LEAN_AND_MEAN
+    #include <winsock2.h>
+    #include <ws2tcpip.h>
+    // clang-format on
+    // So MSVC links against winsock2 automatically
+    #pragma comment(lib, "Ws2_32")
+#else
+    // Assume Unix-like
+    #include <arpa/inet.h>
+    #include <errno.h>
+    #include <netdb.h>
+    #include <sys/socket.h>
+    #include <sys/types.h>
+    #include <unistd.h>
+#endif
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
 
 #include "debug_impl.h"
 
@@ -79,6 +92,17 @@ int dose_dial(const char* addr) {
         free(scratch);
         return -1;
     }
+
+    // Perform socket library initialization
+
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+    LPWSADATA data;
+    if (WSAStartup(MAKEWORD(2, 2), data) != 0) {
+        dose_debugf(__func__, "FAIL: WSAStartup() failed");
+        free(scratch);
+        return -1;
+    }
+#endif
 
     // Turn netaddr into actually useful address
     struct addrinfo hints, *res, *p;

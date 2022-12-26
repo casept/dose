@@ -8,6 +8,7 @@ extern "C" {
 #include <stdint.h>
 
 int dose_dial(const char *addr);
+int dose_close(int desc);
 ssize_t dose_send(int desc, const void *buf, size_t count);
 ssize_t dose_recv(int desc, void *buf, size_t count);
 // TODO: Consider exposing the addr parsing function as well

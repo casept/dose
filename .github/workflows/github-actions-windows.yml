@@ -33,7 +33,7 @@ jobs:
       run: |
         pip3 install quom
         make amalgamate
-        make examples
+        make CFLAGS=-lws2_32 examples
 
     - name: 'Test'
       run: |

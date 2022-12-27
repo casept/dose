@@ -1,0 +1,22 @@
+name: "Build (Linux)"
+
+on:
+  pull_request:
+  push:
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: '🧰 Checkout'
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - run: bash ./ci/install-deps-linux.sh
+    - run: bash ./ci/build-linux.sh
+    - run: bash ./ci/test-linux.sh
+
+    - name: 'Archive amalgamation'
+      uses: actions/upload-artifact@v3
+      with:
+        name: dose.h
+        path: dose.h

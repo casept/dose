@@ -22,6 +22,7 @@
 #include <string.h>
 
 #include "debug_impl.h"
+#include "error.h"
 
 // Windows uses different types for the buffer
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
@@ -37,30 +38,30 @@ int dose_close(int desc) {
     if (closesocket(desc) != 0) {
         // TODO: Extract error string here as well
         dose_debugf(__func__, "FAIL: closesocket() failed");
-        return -1;
+        return DOSE_ERR_OS;
     }
     while (true) {
-        // We may have to try multiple times
         switch (WSACleanup()) {
             case 0:
                 break;
             case WSAEINPROGRESS:
+                // We may have to try multiple times
                 continue;
             default:
                 dose_debugf(__func__, "FAIL: WSACleanup() failed");
-                return -1;
+                return DOSE_ERR_OS;
         }
     }
-    return 0;
+    return DOSE_ERR_OK;
 }
 #else
 int dose_close(int desc) {
     if (close(desc) != 0) {
         dose_debugf(__func__, "FAIL: close() failed: %s", strerror(errno));
-        return -1;
+        return DOSE_ERR_OS;
     }
 
-    return 0;
+    return DOSE_ERR_OK;
 }
 #endif
 

@@ -13,25 +13,35 @@
 
 int main(int argc, char** argv) {
     int sock = dose_dial("tcp!google.com!http");  // Equivalent to "tcp!google.com!80"
-    if (sock == -1) {
-        fprintf(stderr, "dose_dial() failed!\n");
+    if (sock < 0) {
+        char* err_str = dose_geterrstr(sock);
+        fprintf(stderr, "dose_dial() failed! Error: %s\n", err_str);
+        dose_freeerrstr(err_str);
         exit(EXIT_FAILURE);
     }
 
     const char request[] = "GET / HTTP/1.0\r\n\r\n";
     if (dose_send(sock, request, strlen(request)) < 0) {
-        fprintf(stderr, "dose_send() failed!\n");
+        char* err_str = dose_geterrstr(sock);
+        fprintf(stderr, "dose_send() failed! Error: %s\n", err_str);
+        dose_freeerrstr(err_str);
         exit(EXIT_FAILURE);
     }
 
     char* resp = calloc(4096, sizeof(char));
-    if (dose_recv(sock, resp, 4096 * sizeof(char)) < 0) {
-        fprintf(stderr, "dose_recv() failed!\n");
+    int err = dose_recv(sock, resp, 4096 * sizeof(char));
+    if (err != DOSE_ERR_OK) {
+        char* err_str = dose_geterrstr(err);
+        fprintf(stderr, "dose_recv() failed! Error: %s\n", err_str);
+        dose_freeerrstr(err_str);
         exit(EXIT_FAILURE);
     }
 
-    if (dose_close(sock) != 0) {
-        fprintf(stderr, "dose_cose() failed!\n");
+    err = dose_close(sock);
+    if (err != DOSE_ERR_OK) {
+        char* err_str = dose_geterrstr(err);
+        fprintf(stderr, "dose_close() failed! Error: %s\n", err_str);
+        dose_freeerrstr(err_str);
         exit(EXIT_FAILURE);
     }
 
